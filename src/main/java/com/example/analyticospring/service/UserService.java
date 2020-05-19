@@ -1,10 +1,9 @@
 package com.example.analyticospring.service;
 
-import com.example.analyticospring.controller.UserController;
 import com.example.analyticospring.entity.User;
 import com.example.analyticospring.repository.UserRepository;
 import com.example.analyticospring.service.implementation.UserServiceImpl;
-import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,16 +15,10 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 @Service
-@Data
+@Slf4j
 public class UserService implements UserServiceImpl {
-    private UserRepository userRepository;
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
-
-
-    @Autowired
-    public void setUserRepository(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private UserRepository userRepository;
 
     private static byte[] getSaltPassword() {
         try {
@@ -55,7 +48,12 @@ public class UserService implements UserServiceImpl {
         return null;
     }
 
-    public User signup(String first_name, String last_name, String email, String password){
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    public User signup(String first_name, String last_name, String email, String password) {
         User user = new User();
         user.setFirstName(first_name);
         user.setLastName(last_name);
@@ -83,9 +81,9 @@ public class UserService implements UserServiceImpl {
         return null;
     }
 
-    public User signin(String email, String password){
+    public User signin(String email, String password) {
         User user = getByEmailId(email);
-        if(user == null){
+        if (user == null) {
             logger.debug("{} not found in the database", email);
             return null;
         }
@@ -102,8 +100,13 @@ public class UserService implements UserServiceImpl {
         return null;
     }
 
-    public User getByEmailId(String email){
+    public User getByEmailId(String email) {
         return userRepository.getByEmailId(email);
     }
+
+    public User getById(Integer id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
 
 }
