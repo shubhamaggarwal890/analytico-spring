@@ -21,5 +21,7 @@ public class Analyzer {
     private boolean hashtags;
     // follower count of the user, in tweeter and facebook
     private boolean followers;
+    // check if the produced is a question or not
+    private boolean question;
 
 }
