@@ -46,21 +46,21 @@ public class TwitterController {
         User user = userService.getById(twitter.getUser_id());
         if(user == null){
             logger.debug("POST request /twitter_analysis {} user not found in database", twitter.getUser_id());
-            return ResponseEntity.ok().build();
+            return ResponseEntity.notFound().build();
         }
         logger.info("POST request /twitter_analysis for user {}", user.getEmailId());
         Analyzer analyzer = analyzerService.addAnalyzerInstance(twitter.getAnalyzer(), user.getEmailId(), "twitter");
         if(analyzer == null){
             logger.debug("Failed to store {} analyzer data for twitter, service returned null", user.getEmailId());
-            return ResponseEntity.ok().build();
+            return ResponseEntity.notFound().build();
         }
         Twitter twitter1 = twitterService.addTwitterInstance(twitter.getScreen_name(), user, analyzer);
         if(twitter1 == null){
             logger.debug("Failed to store {} twitter analysis data, service returned null", user.getEmailId());
-            return ResponseEntity.ok().build();
+            return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok().body(twitter1);
+        return ResponseEntity.ok().build();
     }
 
 }

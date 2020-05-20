@@ -72,7 +72,7 @@ public class UserService implements UserServiceImpl {
         }
         user.setPassword(secure_password);
         try {
-            userRepository.save(user);
+            user = userRepository.save(user);
             logger.info("{} successfully saved in to database", user.getEmailId());
             return user;
         } catch (DataAccessException error) {

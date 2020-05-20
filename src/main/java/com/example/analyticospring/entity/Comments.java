@@ -26,6 +26,6 @@ public class Comments {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post")
-    private Reddit post;
+    private Posts post;
 
 }

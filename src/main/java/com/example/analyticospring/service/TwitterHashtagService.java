@@ -30,7 +30,7 @@ public class TwitterHashtagService implements TwitterHashtagServiceImpl {
         twitterHashtag.setTweet(tweet);
         twitterHashtag.setTwitter(twitter);
         try {
-            twitterHashtagRepository.save(twitterHashtag);
+            twitterHashtag = twitterHashtagRepository.save(twitterHashtag);
             logger.info("{} twitter hashtag detail successfully saved in to database for twitter {}", hashtag, twitter.getId());
             return twitterHashtag;
         } catch (DataAccessException error) {

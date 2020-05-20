@@ -29,7 +29,7 @@ public class AnalyzerService implements AnalyzerServiceImpl {
         analyzer1.setFollowers(analyzer.isFollowers());
         analyzer1.setHashtags(analyzer.isHashtags());
         try {
-            analyzerRepository.save(analyzer1);
+            analyzer1 = analyzerRepository.save(analyzer1);
             logger.info("{} analyzer details for {} successfully saved in to database", email, use);
             return analyzer1;
         } catch (DataAccessException error) {

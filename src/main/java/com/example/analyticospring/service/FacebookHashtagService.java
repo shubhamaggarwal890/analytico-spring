@@ -29,7 +29,7 @@ public class FacebookHashtagService implements FacebookHashtagServiceImpl {
         facebookHashtag.setPost(posts);
         facebookHashtag.setFacebook(facebook);
         try {
-            facebookHashtagRepository.save(facebookHashtag);
+            facebookHashtag = facebookHashtagRepository.save(facebookHashtag);
             logger.info("{} facebook hashtag detail successfully saved in to database for facebook {}", name,
                     facebook.getId());
             return facebookHashtag;

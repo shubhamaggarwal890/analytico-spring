@@ -33,7 +33,7 @@ public class TweetService implements TweetServiceImpl {
         tweet1.setQuestion_remark(question_remark);
         tweet1.setTwitter(twitter);
         try {
-            tweetRepository.save(tweet1);
+            tweet1 = tweetRepository.save(tweet1);
             logger.info("tweet of {} successfully saved along with analysis in to database for twitter {}", screen_name,
                     twitter.getId());
             return tweet1;

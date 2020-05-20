@@ -43,7 +43,7 @@ public class PostService implements PostServiceImpl {
             id = reddit.getId();
         }
         try {
-            postRepository.save(posts);
+            posts = postRepository.save(posts);
             logger.info("post of {} successfully saved along with analysis in to database for {} {}", post_user,
                     postInstance, id);
             return posts;

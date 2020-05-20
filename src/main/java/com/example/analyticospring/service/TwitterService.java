@@ -28,11 +28,12 @@ public class TwitterService implements TwitterServiceImpl {
     public Twitter addTwitterInstance(String screen_name, User user, Analyzer analyzer) {
         Twitter twitter = new Twitter();
         twitter.setScreen_name(screen_name);
+        twitter.setFollowers_count(0);
         twitter.setDate(new Date());
         twitter.setUser(user);
         twitter.setAnalyzer(analyzer);
         try {
-            twitterRepository.save(twitter);
+            twitter = twitterRepository.save(twitter);
             logger.info("{} twitter detail successfully saved in to database", user.getEmailId());
             return twitter;
         } catch (DataAccessException error) {

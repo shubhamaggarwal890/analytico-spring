@@ -30,7 +30,7 @@ public class UserController {
         User user1 = userService.signup(user.getFirstName(), user.getLastName(), user.getEmailId(), user.getPassword());
         if (user1 == null) {
             logger.debug("{} signup attempt failed, service returned null", user.getEmailId());
-            return ResponseEntity.ok().build();
+            return ResponseEntity.notFound().build();
         }
         user1.setSalt(null);
         user1.setPassword(null);
@@ -44,7 +44,7 @@ public class UserController {
         User user1 = userService.signin(user.getEmailId(), user.getPassword());
         if (user1 == null) {
             logger.debug("{} login attempt failed, service returned null", user.getEmailId());
-            return ResponseEntity.ok().build();
+            return ResponseEntity.notFound().build();
         }
         user1.setSalt(null);
         user1.setPassword(null);

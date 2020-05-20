@@ -30,12 +30,12 @@ public class FacebookService implements FacebookServiceImpl {
         facebook.setEmail(email);
         facebook.setName(name);
         facebook.setPage(page);
-        facebook.setFriends_count(null);
+        facebook.setFriends_count(0);
         facebook.setDate(new Date());
         facebook.setUser(user);
         facebook.setAnalyzer(analyzer);
         try {
-            facebookRepository.save(facebook);
+            facebook = facebookRepository.save(facebook);
             logger.info("{} facebook detail successfully saved in to database", user.getEmailId());
             return facebook;
         } catch (DataAccessException error) {

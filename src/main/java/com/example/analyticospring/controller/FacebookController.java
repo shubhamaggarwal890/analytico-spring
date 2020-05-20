@@ -46,23 +46,23 @@ public class FacebookController {
         User user = userService.getById(facebook.getUser_id());
         if (user == null) {
             logger.debug("POST request /facebook_analysis {} user not found in database", facebook.getUser_id());
-            return ResponseEntity.ok().build();
+            return ResponseEntity.notFound().build();
         }
         logger.info("POST request /facebook_analysis for user {}", user.getEmailId());
         Analyzer analyzer = analyzerService.addAnalyzerInstance(facebook.getAnalyzer(), user.getEmailId(), "facebook");
         if (analyzer == null) {
             logger.debug("Failed to store {} analyzer data for facebook, service returned null", user.getEmailId());
-            return ResponseEntity.ok().build();
+            return ResponseEntity.notFound().build();
         }
         Facebook facebook1 = facebookService.addFacebookInstance(facebook.getEmail(), facebook.getName(),
                 facebook.getPage(), user, analyzer);
 
         if (facebook1 == null) {
             logger.debug("Failed to store {} facebook analysis data, service returned null", user.getEmailId());
-            return ResponseEntity.ok().build();
+            return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok().body(facebook1);
+        return ResponseEntity.ok().build();
     }
 
 }

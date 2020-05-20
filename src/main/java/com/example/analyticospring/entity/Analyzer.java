@@ -17,11 +17,13 @@ public class Analyzer {
     private boolean sentimental;
     // Checking if the tweet or post is fake or not
     private boolean news;
+    // check if the produced is a question or not
+    private boolean question;
     // Checking the count of hashtags, frequency of hashtags
     private boolean hashtags;
     // follower count of the user, in tweeter and facebook
     private boolean followers;
-    // check if the produced is a question or not
-    private boolean question;
+    //Analyze the comments in reddit
+    private boolean comments;
 
 }
