@@ -40,4 +40,8 @@ public class TwitterService implements TwitterServiceImpl {
         }
         return null;
     }
+
+    public Twitter getById(Integer twitter_id) {
+        return twitterRepository.findById(twitter_id).orElse(null);
+    }
 }

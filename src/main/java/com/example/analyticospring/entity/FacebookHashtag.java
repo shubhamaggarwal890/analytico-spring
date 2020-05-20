@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "facebook_hashtag")
 public class FacebookHashtag {
     private @Id
     @GeneratedValue

@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "twitter_hashtag")
 public class TwitterHashtag {
     private @Id
     @GeneratedValue

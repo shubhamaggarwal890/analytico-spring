@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*")
 @Slf4j
 public class TwitterController {
     private UserService userService;
     private TwitterService twitterService;
     private AnalyzerService analyzerService;
-    private static final Logger logger = LoggerFactory.getLogger(TwitterService.class);
+    private static final Logger logger = LoggerFactory.getLogger(TwitterController.class);
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -59,6 +59,7 @@ public class TwitterController {
             logger.debug("Failed to store {} twitter analysis data, service returned null", user.getEmailId());
             return ResponseEntity.ok().build();
         }
+
         return ResponseEntity.ok().body(twitter1);
     }
 

@@ -20,11 +20,10 @@ public class Tweet {
     private String tweet;
     private String sentimental_remark;
     private String news_remark;
+    private String question_remark;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "twitter")
     private Twitter twitter;
-
-
 
 }

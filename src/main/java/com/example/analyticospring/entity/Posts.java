@@ -25,6 +25,7 @@ public class Posts {
     private String sentimental_remarks;
     private String news_remark;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "facebook")
     private Facebook facebook;

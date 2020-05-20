@@ -9,9 +9,8 @@
         <appender-ref ref="STDOUT"/>
     </root>
 
-    <property name="LOG_DIR" value="/var/log/analytico"/>
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
-        <file>${LOG_DIR}/analytico.log</file>
+        <file>analytico.log</file>
         <append>true</append>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} %-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
