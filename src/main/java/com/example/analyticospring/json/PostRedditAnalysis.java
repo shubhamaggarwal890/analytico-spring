@@ -15,7 +15,7 @@ public class PostRedditAnalysis {
     private String author;
     private String link;
     private Integer ups;
-    private Double sentiment;
+    private Double sentimental;
     private Integer comments_count;
     private List<CommentRedditAnalysis> comments = new ArrayList<>();
 }

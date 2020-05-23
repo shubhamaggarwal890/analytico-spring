@@ -12,5 +12,5 @@ public class CommentRedditAnalysis {
     private String author;
     private Double controversial;
     private Integer ups;
-    private Double sentiment;
+    private Double sentimental;
 }

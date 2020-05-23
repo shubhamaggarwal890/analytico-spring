@@ -18,7 +18,7 @@ public class QuoraAnswers {
     private String author;
 
     @Lob
-    @Column(length = 2048)
+    @Column(length = 512)
     private String answer;
 
     private Double sentimental;

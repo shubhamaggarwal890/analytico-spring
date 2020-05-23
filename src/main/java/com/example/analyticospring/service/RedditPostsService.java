@@ -28,7 +28,7 @@ public class RedditPostsService implements RedditPostsServiceImpl {
         redditPosts.setAuthor(author);
         redditPosts.setLink(link);
         redditPosts.setUps(ups);
-        redditPosts.setPosts(posts);
+        redditPosts.setPosts(posts.substring(0, Math.min(posts.length(), 500)));
         redditPosts.setSentimental(sentimental);
         redditPosts.setComments(comments);
         redditPosts.setReddit(reddit);

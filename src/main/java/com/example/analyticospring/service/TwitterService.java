@@ -125,6 +125,9 @@ public class TwitterService implements TwitterServiceImpl {
                     tweet.getSentimental(), tweet.getNews(), tweet.getQuestion(), tweet.getHashtag_count(),
                     true, twitter);
 
+            if(tweet1 == null ){
+                continue;
+            }
             for (HashtagRequest hashtag : tweet.getHashtags()) {
                 tweetHashtagService.addTweetHashtagInstance(hashtag.getName(), tweet1);
             }
@@ -134,7 +137,9 @@ public class TwitterService implements TwitterServiceImpl {
             Tweet tweet1 = tweetService.addTweetInstance(hashtags.getScreen_name(), hashtags.getLink(),
                     hashtags.getPost(), hashtags.getSentimental(), hashtags.getNews(), hashtags.getQuestion(),
                     hashtags.getHashtag_count(), false, twitter);
-
+            if(tweet1 == null ){
+                continue;
+            }
             for (HashtagRequest hashtag : hashtags.getHashtags()) {
                 tweetHashtagService.addTweetHashtagInstance(hashtag.getName(), tweet1);
             }

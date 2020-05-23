@@ -25,7 +25,7 @@ public class QuoraAnswerService implements QuoraAnswerServiceImpl {
     public QuoraAnswers addAnswerInstance(String author, String answer, Double sentimental, QuoraQuestion question) {
         QuoraAnswers answers = new QuoraAnswers();
         answers.setAuthor(author);
-        answers.setAnswer(answer);
+        answers.setAnswer(answer.substring(0, Math.min(answer.length(), 500)));
         answers.setSentimental(sentimental);
         answers.setQuestion(question);
         try {

@@ -100,10 +100,13 @@ public class RedditService implements RedditServiceImpl {
         }
         for (PostRedditAnalysis posts : redditAnalysisResponse.getPosts()) {
             RedditPosts redditPosts = redditPostsService.addRedditPostsInstance(posts.getAuthor(), posts.getLink(),
-                    posts.getUps(), posts.getPost(), posts.getSentiment(), posts.getComments_count(), reddit);
+                    posts.getUps(), posts.getPost(), posts.getSentimental(), posts.getComments_count(), reddit);
+            if(redditPosts == null){
+                continue;
+            }
             for (CommentRedditAnalysis comment : posts.getComments()) {
                 redditCommentService.addCommentInstance(comment.getAuthor(), comment.getComment(),
-                        comment.getSentiment(), comment.getControversial(), comment.getUps(), redditPosts);
+                        comment.getSentimental(), comment.getControversial(), comment.getUps(), redditPosts);
             }
         }
 

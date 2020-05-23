@@ -16,7 +16,7 @@ public class QuoraQuestion {
     Integer id;
 
     @Lob
-    @Column(length = 255)
+    @Column(length = 512)
     private String question;
     private Integer answers;
     private String link;

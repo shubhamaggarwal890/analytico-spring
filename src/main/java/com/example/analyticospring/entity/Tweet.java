@@ -17,6 +17,9 @@ public class Tweet {
 
     private String  screen_name;
     private String  link;
+
+    @Lob
+    @Column(length = 512)
     private String  tweet;
     private Double  sentimental;
     private Double  news;

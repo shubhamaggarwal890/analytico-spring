@@ -26,7 +26,7 @@ public class RedditCommentService implements RedditCommentServiceImpl {
                                              Integer ups, RedditPosts post) {
         RedditComments comments = new RedditComments();
         comments.setAuthor(author);
-        comments.setComment(comment);
+        comments.setComment(comment.substring(0, Math.min(comment.length(), 500)));
         comments.setSentimental(sentimental);
         comments.setControversy(controversy);
         comments.setUps(ups);

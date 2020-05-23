@@ -24,7 +24,7 @@ public class QuoraQuestionService implements QuoraQuestionServiceImpl {
     public QuoraQuestion addQuestionInstance(String question, Integer answers, String link, boolean from_question,
                                              Quora quora) {
         QuoraQuestion question1 = new QuoraQuestion();
-        question1.setQuestion(question);
+        question1.setQuestion(question.substring(0, Math.min(question.length(), 500)));
         question1.setAnswers(answers);
         question1.setLink(link);
         question1.setFrom_question(from_question);

@@ -17,8 +17,10 @@ public class FacebookPosts {
     Integer id;
 
     @Lob
-    @Column(length = 8192)
+    @Column(length = 512)
     private String posts;
+
+    private boolean from_page;
 
     private Double sentimental;
     private Double question;

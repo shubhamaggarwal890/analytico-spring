@@ -99,15 +99,21 @@ public class QuoraService implements QuoraServiceImpl {
         for (QueryQuoraAnalysis query : quoraAnalysisResponse.getQuery()) {
             QuoraQuestion quoraQuestion = quoraQuestionService.addQuestionInstance(query.getQuestion(),
                     query.getAnswer_count(), query.getLink(), false, quora);
+            if(quoraQuestion == null){
+                continue;
+            }
             quoraAnswerService.addAnswerInstance(query.getAuthor(), query.getAnswer(), query.getSentimental(),
                     quoraQuestion);
         }
         QuestionQuoraAnalysis question = quoraAnalysisResponse.getQuestion();
         QuoraQuestion quoraQuestion = quoraQuestionService.addQuestionInstance(question.getQuestion(),
                 question.getAnswer_count(), question.getLink(), true, quora);
-        for (AnswerQuoraAnalysis answer : question.getAnswers()) {
-            quoraAnswerService.addAnswerInstance(answer.getAuthor(), answer.getAnswer(), answer.getSentimental(),
-                    quoraQuestion);
+
+        if(quoraQuestion != null){
+            for (AnswerQuoraAnalysis answer : question.getAnswers()) {
+                quoraAnswerService.addAnswerInstance(answer.getAuthor(), answer.getAnswer(), answer.getSentimental(),
+                        quoraQuestion);
+            }
         }
 
         updateAnalysisCompletion(quora, quoraAnalysisResponse.getEmail());

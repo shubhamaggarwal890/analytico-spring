@@ -23,12 +23,13 @@ public class FacebookPostService implements FacebookPostServiceImpl {
     }
 
     public FacebookPosts addPostInstance(String post, Double sentimental, Double question, Integer hashtags,
-                                         Facebook facebook) {
+                                         boolean page, Facebook facebook) {
         FacebookPosts facebookPosts = new FacebookPosts();
-        facebookPosts.setPosts(post);
+        facebookPosts.setPosts(post.substring(0, Math.min(post.length(), 500)));
         facebookPosts.setSentimental(sentimental);
         facebookPosts.setQuestion(question);
         facebookPosts.setFacebook(facebook);
+        facebookPosts.setFrom_page(page);
         facebookPosts.setHashtags(hashtags);
         try {
             facebookPosts = facebookPostRepository.save(facebookPosts);

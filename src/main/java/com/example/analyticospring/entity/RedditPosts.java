@@ -20,7 +20,7 @@ public class RedditPosts {
     private Integer ups;
 
     @Lob
-    @Column(length = 8192)
+    @Column(length = 512)
     private String posts;
 
     private Double sentimental;

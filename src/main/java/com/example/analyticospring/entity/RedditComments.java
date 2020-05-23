@@ -18,7 +18,7 @@ public class RedditComments {
     private String author;
 
     @Lob
-    @Column(length = 4098)
+    @Column(length = 512)
     private String comment;
 
     private Double sentimental;

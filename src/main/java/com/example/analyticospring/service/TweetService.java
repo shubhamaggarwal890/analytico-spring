@@ -27,7 +27,7 @@ public class TweetService implements TweetServiceImpl {
         Tweet tweet1 = new Tweet();
         tweet1.setScreen_name(screen_name);
         tweet1.setLink(link);
-        tweet1.setTweet(tweet);
+        tweet1.setTweet(tweet.substring(0, Math.min(tweet.length(), 500)));
         tweet1.setSentimental(sentimental);
         tweet1.setNews(news);
         tweet1.setQuestion(question);

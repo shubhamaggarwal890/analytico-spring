@@ -15,4 +15,5 @@ public class FacebookAnalysisResponse {
     private String email;
     private Integer friends;
     private List<PostTweetResponseAnalysis> posts = new ArrayList<>();
+    private List<PostTweetResponseAnalysis> page_post = new ArrayList<>();
 }

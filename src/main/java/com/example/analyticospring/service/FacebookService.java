@@ -126,12 +126,28 @@ public class FacebookService implements FacebookServiceImpl {
 
         for (PostTweetResponseAnalysis post : facebookAnalysisResponse.getPosts()) {
             FacebookPosts facebookPosts = facebookPostService.addPostInstance(post.getPost(), post.getSentimental(),
-                    post.getQuestion(), post.getHashtag_count(), facebook);
+                    post.getQuestion(), post.getHashtag_count(), false, facebook);
+
+            if(facebookPosts == null){
+                continue;
+            }
 
             for (HashtagRequest hashtag : post.getHashtags()) {
                 facebookHashtagService.addFacebookHashtag(hashtag.getName(), facebookPosts);
             }
         }
+
+        for (PostTweetResponseAnalysis post : facebookAnalysisResponse.getPage_post()) {
+            FacebookPosts facebookPosts = facebookPostService.addPostInstance(post.getPost(), post.getSentimental(),
+                    post.getQuestion(), post.getHashtag_count(), true, facebook);
+            if(facebookPosts == null){
+                continue;
+            }
+            for (HashtagRequest hashtag : post.getHashtags()) {
+                facebookHashtagService.addFacebookHashtag(hashtag.getName(), facebookPosts);
+            }
+        }
+
         updateAnalysisCompletion(facebook, facebookAnalysisResponse.getEmail());
     }
 
