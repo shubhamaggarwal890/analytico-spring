@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Question {
+public class QuoraQuestion {
     private @Id
     @GeneratedValue
     Integer id;
@@ -18,7 +18,8 @@ public class Question {
     @Lob
     @Column(length = 255)
     private String question;
-    private String question_url;
+    private Integer answers;
+    private String link;
 
     private boolean from_question;
 

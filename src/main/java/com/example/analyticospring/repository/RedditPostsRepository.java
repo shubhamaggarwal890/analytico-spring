@@ -1,9 +1,9 @@
 package com.example.analyticospring.repository;
 
-import com.example.analyticospring.entity.Question;
+import com.example.analyticospring.entity.RedditPosts;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface QuestionRepository extends CrudRepository<Question, Integer> {
+public interface RedditPostsRepository extends CrudRepository<RedditPosts, Integer> {
 }

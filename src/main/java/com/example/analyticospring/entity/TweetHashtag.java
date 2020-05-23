@@ -10,15 +10,15 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "facebook_hashtag")
-public class FacebookHashtag {
+@Table(name = "tweet_hashtag")
+public class TweetHashtag {
     private @Id
     @GeneratedValue
     Integer id;
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "posts")
-    private FacebookPosts post;
+    @JoinColumn(name = "tweet")
+    private Tweet tweet;
 
 }

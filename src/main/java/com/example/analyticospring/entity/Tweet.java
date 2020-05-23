@@ -15,12 +15,14 @@ public class Tweet {
     @GeneratedValue
     Integer id;
 
-    private String screen_name;
-    private String screen_name_url;
-    private String tweet;
-    private String sentimental_remark;
-    private String news_remark;
-    private String question_remark;
+    private String  screen_name;
+    private String  link;
+    private String  tweet;
+    private Double  sentimental;
+    private Double  news;
+    private Double  question;
+    private Integer hashtags;
+    private boolean from_screen_name;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "twitter")

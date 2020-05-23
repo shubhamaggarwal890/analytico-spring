@@ -10,27 +10,21 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Posts {
+@Table(name = "facebook_posts")
+public class FacebookPosts {
     private @Id
     @GeneratedValue
     Integer id;
-
-    private String post_user;
-    private String post_url;
 
     @Lob
     @Column(length = 8192)
     private String posts;
 
-    private String sentimental_remarks;
-    private String news_remark;
-
+    private Double sentimental;
+    private Double question;
+    private Integer hashtags;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "facebook")
     private Facebook facebook;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reddit")
-    private Reddit reddit;
 }

@@ -1,9 +1,9 @@
 package com.example.analyticospring.service;
 
-import com.example.analyticospring.entity.Answers;
-import com.example.analyticospring.entity.Question;
-import com.example.analyticospring.repository.AnswerRepository;
-import com.example.analyticospring.service.implementation.AnswerServiceImpl;
+import com.example.analyticospring.entity.QuoraAnswers;
+import com.example.analyticospring.entity.QuoraQuestion;
+import com.example.analyticospring.repository.QuoraAnswerRepository;
+import com.example.analyticospring.service.implementation.QuoraAnswerServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,22 +13,20 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class AnswerService implements AnswerServiceImpl {
-    private static final Logger logger = LoggerFactory.getLogger(AnswerService.class);
-    private AnswerRepository answerRepository;
+public class QuoraAnswerService implements QuoraAnswerServiceImpl {
+    private static final Logger logger = LoggerFactory.getLogger(QuoraAnswerService.class);
+    private QuoraAnswerRepository answerRepository;
 
     @Autowired
-    public void setAnswerRepository(AnswerRepository answerRepository) {
+    public void setAnswerRepository(QuoraAnswerRepository answerRepository) {
         this.answerRepository = answerRepository;
     }
 
-    public Answers addAnswerInstance(String answerer, String answer_url, String answer, String sentimental,
-                                     Question question) {
-        Answers answers = new Answers();
-        answers.setAnswerer(answerer);
-        answers.setAnswer_url(answer_url);
+    public QuoraAnswers addAnswerInstance(String author, String answer, Double sentimental, QuoraQuestion question) {
+        QuoraAnswers answers = new QuoraAnswers();
+        answers.setAuthor(author);
         answers.setAnswer(answer);
-        answers.setSentimental_remarks(sentimental);
+        answers.setSentimental(sentimental);
         answers.setQuestion(question);
         try {
             answers = answerRepository.save(answers);

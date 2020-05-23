@@ -61,7 +61,14 @@ public class FacebookController {
             logger.debug("Failed to store {} facebook analysis data, service returned null", user.getEmailId());
             return ResponseEntity.notFound().build();
         }
-
+        FacebookRequest facebookRequest = new FacebookRequest();
+        facebookRequest.setUser_id(facebook1.getId());
+        facebookRequest.setEmail(user.getEmailId());
+        facebookRequest.setName(facebook.getName());
+        facebookRequest.setPage(facebook.getPage());
+        facebookRequest.setToken(facebook.getToken());
+        facebookRequest.setAnalyzer(facebook.getAnalyzer());
+        facebookService.callForAnalysis(facebookRequest);
         return ResponseEntity.ok().build();
     }
 

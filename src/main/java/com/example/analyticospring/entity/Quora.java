@@ -18,6 +18,7 @@ public class Quora {
 
     private String search_query;
     private String question;
+    private boolean analysis;
 
     @Basic
     @Temporal(TemporalType.TIMESTAMP)

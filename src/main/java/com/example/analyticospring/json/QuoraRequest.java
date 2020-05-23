@@ -10,9 +10,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class QuoraRequest {
     private Integer user_id;
+    private String email;
     private String query;
     private String question;
-    private String page;
     private Analyzer analyzer;
 
 }

@@ -22,15 +22,17 @@ public class TweetService implements TweetServiceImpl {
         this.tweetRepository = tweetRepository;
     }
 
-    public Tweet addTweetInstance(String screen_name, String screen_name_url, String tweet, String sentimental_remark,
-                                  String news_remark, String question_remark, Twitter twitter) {
+    public Tweet addTweetInstance(String screen_name, String link, String tweet, Double sentimental, Double news,
+                                  Double question, Integer hashtags, boolean from_screen_name, Twitter twitter){
         Tweet tweet1 = new Tweet();
         tweet1.setScreen_name(screen_name);
-        tweet1.setScreen_name_url(screen_name_url);
+        tweet1.setLink(link);
         tweet1.setTweet(tweet);
-        tweet1.setSentimental_remark(sentimental_remark);
-        tweet1.setNews_remark(news_remark);
-        tweet1.setQuestion_remark(question_remark);
+        tweet1.setSentimental(sentimental);
+        tweet1.setNews(news);
+        tweet1.setQuestion(question);
+        tweet1.setHashtags(hashtags);
+        tweet1.setFrom_screen_name(from_screen_name);
         tweet1.setTwitter(twitter);
         try {
             tweet1 = tweetRepository.save(tweet1);

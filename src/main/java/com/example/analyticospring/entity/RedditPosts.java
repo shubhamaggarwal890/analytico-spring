@@ -10,22 +10,25 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Answers {
+public class RedditPosts {
     private @Id
     @GeneratedValue
     Integer id;
 
-    private String answerer;
-    private String answer_url;
+    private String author;
+    private String link;
+    private Integer ups;
 
     @Lob
-    @Column(length = 4096)
-    private String answer;
+    @Column(length = 8192)
+    private String posts;
 
-    private String sentimental_remarks;
+    private Double sentimental;
+    private Integer comments;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "question")
-    private Question question;
+    @JoinColumn(name = "reddit")
+    private Reddit reddit;
+
 
 }

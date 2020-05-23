@@ -16,7 +16,9 @@ public class Twitter {
     @GeneratedValue
     Integer id;
     private String screen_name;
-    private Integer followers_count;
+    private Integer followers;
+    private Integer following;
+    private boolean analysis;
 
     @Basic
     @Temporal(TemporalType.TIMESTAMP)

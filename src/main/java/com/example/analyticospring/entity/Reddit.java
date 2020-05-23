@@ -17,6 +17,7 @@ public class Reddit {
     Integer id;
 
     private String subreddit;
+    private boolean analysis;
 
     @Basic
     @Temporal(TemporalType.TIMESTAMP)

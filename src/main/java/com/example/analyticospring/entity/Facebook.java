@@ -20,7 +20,9 @@ public class Facebook {
     private String name;
     private String page;
 
-    private Integer friends_count;
+    private Integer friends;
+
+    private boolean analysis;
 
     @Basic
     @Temporal(TemporalType.TIMESTAMP)

@@ -3,6 +3,7 @@ package com.example.analyticospring.service;
 import com.example.analyticospring.entity.Tweet;
 import com.example.analyticospring.entity.Twitter;
 import com.example.analyticospring.entity.TwitterHashtag;
+import com.example.analyticospring.repository.TweetHashtagRepository;
 import com.example.analyticospring.repository.TwitterHashtagRepository;
 import com.example.analyticospring.service.implementation.TwitterHashtagServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -23,11 +24,9 @@ public class TwitterHashtagService implements TwitterHashtagServiceImpl {
         this.twitterHashtagRepository = twitterHashtagRepository;
     }
 
-    public TwitterHashtag addTwitterHashtag(String hashtag, boolean analysis, Tweet tweet, Twitter twitter) {
+    public TwitterHashtag addTwitterHashtag(String hashtag, Twitter twitter) {
         TwitterHashtag twitterHashtag = new TwitterHashtag();
         twitterHashtag.setName(hashtag);
-        twitterHashtag.setAnalysis(analysis);
-        twitterHashtag.setTweet(tweet);
         twitterHashtag.setTwitter(twitter);
         try {
             twitterHashtag = twitterHashtagRepository.save(twitterHashtag);
@@ -39,4 +38,5 @@ public class TwitterHashtagService implements TwitterHashtagServiceImpl {
         }
         return null;
     }
+
 }

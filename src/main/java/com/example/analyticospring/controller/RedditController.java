@@ -50,7 +50,7 @@ public class RedditController {
             logger.debug("POST request /reddit_analysis {} user not found in database", redditRequest.getUser_id());
             return ResponseEntity.notFound().build();
         }
-        logger.info("POST request /twitter_analysis for user {}", user.getEmailId());
+        logger.info("POST request /reddit_analysis for user {}", user.getEmailId());
         Analyzer analyzer = analyzerService.addAnalyzerInstance(redditRequest.getAnalyzer(), user.getEmailId(), "reddit");
         if (analyzer == null) {
             logger.debug("Failed to store {} analyzer data for reddit, service returned null", user.getEmailId());
@@ -61,6 +61,13 @@ public class RedditController {
             logger.debug("Failed to store {} reddit analysis data, service returned null", user.getEmailId());
             return ResponseEntity.notFound().build();
         }
+        RedditRequest redditRequest1 = new RedditRequest();
+        redditRequest1.setEmail(user.getEmailId());
+        redditRequest1.setUser_id(reddit.getId());
+        redditRequest1.setSubreddit(redditRequest.getSubreddit());
+        redditRequest1.setAnalyzer(redditRequest.getAnalyzer());
+
+        redditService.callForAnalysis(redditRequest1);
         return ResponseEntity.ok().build();
 
     }

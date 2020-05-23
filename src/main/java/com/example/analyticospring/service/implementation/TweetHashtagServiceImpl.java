@@ -1,4 +1,4 @@
 package com.example.analyticospring.service.implementation;
 
-public interface QuestionServiceImpl {
+public interface TweetHashtagServiceImpl {
 }

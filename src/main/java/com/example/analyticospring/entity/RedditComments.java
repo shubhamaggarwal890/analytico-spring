@@ -10,15 +10,23 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "facebook_hashtag")
-public class FacebookHashtag {
+public class RedditComments {
     private @Id
     @GeneratedValue
     Integer id;
-    private String name;
+
+    private String author;
+
+    @Lob
+    @Column(length = 4098)
+    private String comment;
+
+    private Double sentimental;
+    private Double controversy;
+    private Integer ups;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "posts")
-    private FacebookPosts post;
+    @JoinColumn(name = "post")
+    private RedditPosts post;
 
 }

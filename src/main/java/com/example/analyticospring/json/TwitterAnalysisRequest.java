@@ -5,12 +5,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
-public class RedditRequest {
-    private Integer user_id;
+public class TwitterAnalysisRequest {
+    private Integer twitter_id;
     private String email;
-    private String subreddit;
+    private String screen_name;
+    private List<HashtagRequest> hashtags = new ArrayList<>();
     private Analyzer analyzer;
 }

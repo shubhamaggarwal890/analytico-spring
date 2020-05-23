@@ -59,6 +59,13 @@ public class QuoraController {
             logger.debug("Failed to store {} quora analysis data, service returned null", user.getEmailId());
             return ResponseEntity.notFound().build();
         }
+        QuoraRequest quoraRequest1 = new QuoraRequest();
+        quoraRequest1.setUser_id(quora.getId());
+        quoraRequest1.setEmail(user.getEmailId());
+        quoraRequest1.setQuery(quoraRequest.getQuery());
+        quoraRequest1.setQuestion(quoraRequest.getQuestion());
+        quoraRequest1.setAnalyzer(quoraRequest.getAnalyzer());
+        quoraService.callForAnalysis(quoraRequest1);
         return ResponseEntity.ok().build();
 
     }

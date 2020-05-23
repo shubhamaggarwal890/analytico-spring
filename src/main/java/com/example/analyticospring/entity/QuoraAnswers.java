@@ -10,22 +10,21 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Comments {
+public class QuoraAnswers {
     private @Id
     @GeneratedValue
     Integer id;
 
-    private String commenting_user;
-    private String comment_url;
+    private String author;
 
     @Lob
-    @Column(length = 1024)
-    private String comment;
+    @Column(length = 2048)
+    private String answer;
 
-    private String sentimental_remarks;
+    private Double sentimental;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post")
-    private Posts post;
+    @JoinColumn(name = "question")
+    private QuoraQuestion question;
 
 }

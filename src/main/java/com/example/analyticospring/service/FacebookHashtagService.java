@@ -1,8 +1,7 @@
 package com.example.analyticospring.service;
 
-import com.example.analyticospring.entity.Facebook;
 import com.example.analyticospring.entity.FacebookHashtag;
-import com.example.analyticospring.entity.Posts;
+import com.example.analyticospring.entity.FacebookPosts;
 import com.example.analyticospring.repository.FacebookHashtagRepository;
 import com.example.analyticospring.service.implementation.FacebookHashtagServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -23,18 +22,17 @@ public class FacebookHashtagService implements FacebookHashtagServiceImpl {
         this.facebookHashtagRepository = facebookHashtagRepository;
     }
 
-    public FacebookHashtag addFacebookHashtag(String name, Posts posts, Facebook facebook) {
+    public FacebookHashtag addFacebookHashtag(String name, FacebookPosts facebookPosts) {
         FacebookHashtag facebookHashtag = new FacebookHashtag();
         facebookHashtag.setName(name);
-        facebookHashtag.setPost(posts);
-        facebookHashtag.setFacebook(facebook);
+        facebookHashtag.setPost(facebookPosts);
         try {
             facebookHashtag = facebookHashtagRepository.save(facebookHashtag);
-            logger.info("{} facebook hashtag detail successfully saved in to database for facebook {}", name,
-                    facebook.getId());
+            logger.info("{} facebook hashtag detail successfully saved in to database for post {}", name,
+                    facebookPosts.getId());
             return facebookHashtag;
         } catch (DataAccessException error) {
-            logger.error("Error while saving the facebook hashtag {} for facebook {}, {}", name, facebook.getId(),
+            logger.error("Error while saving the facebook hashtag {} for post {}, {}", name, facebookPosts.getId(),
                     error.getLocalizedMessage());
         }
         return null;
