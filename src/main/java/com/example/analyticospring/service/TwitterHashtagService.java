@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class TwitterHashtagService implements TwitterHashtagServiceImpl {
@@ -37,6 +39,10 @@ public class TwitterHashtagService implements TwitterHashtagServiceImpl {
                     error.getLocalizedMessage());
         }
         return null;
+    }
+
+    public List<String> getAllHashtagsByTwitter(Twitter twitter){
+        return twitterHashtagRepository.findHashtagByTwitter(twitter);
     }
 
 }

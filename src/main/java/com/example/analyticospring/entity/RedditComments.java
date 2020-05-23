@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "reddit_comments")
 public class RedditComments {
     private @Id
     @GeneratedValue

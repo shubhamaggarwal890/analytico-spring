@@ -10,6 +10,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(name = "quora_answers")
 public class QuoraAnswers {
     private @Id
     @GeneratedValue

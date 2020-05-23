@@ -21,4 +21,9 @@ public class TweetHashtag {
     @JoinColumn(name = "tweet")
     private Tweet tweet;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "twitter")
+    private Twitter twitter;
+
+
 }

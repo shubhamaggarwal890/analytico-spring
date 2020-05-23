@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class TweetService implements TweetServiceImpl {
@@ -45,4 +47,10 @@ public class TweetService implements TweetServiceImpl {
         }
         return null;
     }
+
+    public List<Tweet> getTweetsByTwitter(Twitter twitter){
+        return tweetRepository.findTweetByTwitter(twitter);
+    }
+
+
 }

@@ -5,6 +5,7 @@ import com.example.analyticospring.entity.Twitter;
 import com.example.analyticospring.entity.TwitterHashtag;
 import com.example.analyticospring.entity.User;
 import com.example.analyticospring.json.HashtagRequest;
+import com.example.analyticospring.json.TAnalysisChart;
 import com.example.analyticospring.json.TwitterAnalysisRequest;
 import com.example.analyticospring.json.TwitterRequest;
 import com.example.analyticospring.service.AnalyzerService;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -85,5 +88,30 @@ public class TwitterController {
         twitterAnalysisRequest.setEmail(user.getEmailId());
         twitterService.callForAnalysis(twitterAnalysisRequest);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/get_twitter_analysis")
+    public ResponseEntity<TAnalysisChart> getTwitterAnalysis(@RequestBody TwitterRequest twitter) {
+        User user = userService.getById(twitter.getUser_id());
+        if (user == null) {
+            logger.debug("POST request /get_twitter_analysis {} user not found in database", twitter.getUser_id());
+            return ResponseEntity.notFound().build();
+        }
+
+        logger.info("POST request /get_twitter_analysis for user {}", user.getEmailId());
+        List<Object> twitterAnalyze = twitterService.getTwitterByUser(user);
+        TAnalysisChart analysisChart = new TAnalysisChart();
+        if (twitterAnalyze.get(0) == null && twitterAnalyze.get(1) != null) {
+            analysisChart.setMessage((String) twitterAnalyze.get(1));
+            return ResponseEntity.ok().body(analysisChart);
+        }else if(twitterAnalyze.get(0) != null && twitterAnalyze.get(1) == null){
+            analysisChart = twitterService.prepareAnalysisTwitter((Twitter) twitterAnalyze.get(0));
+            analysisChart.setMessage(null);
+            return ResponseEntity.ok().body(analysisChart);
+        }else{
+            analysisChart = twitterService.prepareAnalysisTwitter((Twitter) twitterAnalyze.get(0));
+            analysisChart.setMessage((String) twitterAnalyze.get(1));
+            return ResponseEntity.ok().body(analysisChart);
+        }
     }
 }
