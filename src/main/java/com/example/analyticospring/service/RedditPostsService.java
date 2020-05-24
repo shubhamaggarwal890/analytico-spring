@@ -1,5 +1,7 @@
 package com.example.analyticospring.service;
 
+import com.example.analyticospring.entity.Facebook;
+import com.example.analyticospring.entity.FacebookPosts;
 import com.example.analyticospring.entity.Reddit;
 import com.example.analyticospring.entity.RedditPosts;
 import com.example.analyticospring.repository.RedditPostsRepository;
@@ -10,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -41,7 +45,15 @@ public class RedditPostsService implements RedditPostsServiceImpl {
             logger.error("Error while saving the reddit {} post, {}", reddit.getId(), error.getLocalizedMessage());
         }
         return null;
-
-
     }
+
+    public List<RedditPosts> getPostsByReddit(Reddit reddit){
+        return redditPostsRepository.findRedditPostsByReddit(reddit);
+    }
+
+    public List<Object []> getTopPostsByUpsReddit(Reddit reddit){
+        return redditPostsRepository.findRedditPostsUpsByReddit(reddit);
+    }
+
+
 }

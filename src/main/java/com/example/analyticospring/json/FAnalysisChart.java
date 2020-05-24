@@ -10,12 +10,11 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class TAnalysisChart {
+public class FAnalysisChart {
     String message;
-    String screen_name;
-    Integer following;
-    Integer followers;
-    Integer tweets_count;
+    String user;
+    Integer friends;
+    Integer post_count;
     Integer hashtags_count;
     List<HashtagAnalysisChart> hashtags = new ArrayList<>();
     Integer s_positive;
@@ -23,7 +22,5 @@ public class TAnalysisChart {
     Integer s_neutral;
     Integer q_true;
     Integer q_false;
-    Integer n_true;
-    Integer n_fake;
     THashtagModelChart h_model;
 }

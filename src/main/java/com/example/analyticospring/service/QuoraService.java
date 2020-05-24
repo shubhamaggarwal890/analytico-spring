@@ -1,9 +1,6 @@
 package com.example.analyticospring.service;
 
-import com.example.analyticospring.entity.Analyzer;
-import com.example.analyticospring.entity.Quora;
-import com.example.analyticospring.entity.QuoraQuestion;
-import com.example.analyticospring.entity.User;
+import com.example.analyticospring.entity.*;
 import com.example.analyticospring.json.*;
 import com.example.analyticospring.repository.QuoraRepository;
 import com.example.analyticospring.service.implementation.QuoraServiceImpl;
@@ -19,7 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -96,27 +96,130 @@ public class QuoraService implements QuoraServiceImpl {
             logger.debug("Failed to get quora id for user {}, quora id not found", quoraAnalysisResponse.getEmail());
             return;
         }
+
         for (QueryQuoraAnalysis query : quoraAnalysisResponse.getQuery()) {
             QuoraQuestion quoraQuestion = quoraQuestionService.addQuestionInstance(query.getQuestion(),
                     query.getAnswer_count(), query.getLink(), false, quora);
-            if(quoraQuestion == null){
+            if (quoraQuestion == null) {
                 continue;
             }
             quoraAnswerService.addAnswerInstance(query.getAuthor(), query.getAnswer(), query.getSentimental(),
-                    quoraQuestion);
+                    quoraQuestion, quora);
         }
         QuestionQuoraAnalysis question = quoraAnalysisResponse.getQuestion();
-        QuoraQuestion quoraQuestion = quoraQuestionService.addQuestionInstance(question.getQuestion(),
-                question.getAnswer_count(), question.getLink(), true, quora);
+        if (question != null) {
+            QuoraQuestion quoraQuestion = quoraQuestionService.addQuestionInstance(question.getQuestion(),
+                    question.getAnswer_count(), question.getLink(), true, quora);
 
-        if(quoraQuestion != null){
-            for (AnswerQuoraAnalysis answer : question.getAnswers()) {
-                quoraAnswerService.addAnswerInstance(answer.getAuthor(), answer.getAnswer(), answer.getSentimental(),
-                        quoraQuestion);
+            if (quoraQuestion != null) {
+                for (AnswerQuoraAnalysis answer : question.getAnswers()) {
+                    quoraAnswerService.addAnswerInstance(answer.getAuthor(), answer.getAnswer(), answer.getSentimental(),
+                            quoraQuestion, quora);
+                }
+
             }
         }
-
         updateAnalysisCompletion(quora, quoraAnalysisResponse.getEmail());
+    }
+
+    public List<Object> getQuoraByUser(User user) {
+        List<Quora> quora = quoraRepository.findQuoraByUser(user);
+        if (quora.isEmpty()) {
+            logger.info("User {} not started any quora analysis, looking for reports", user.getEmailId());
+            return Arrays.asList(null, "You haven't started any analysis of your quora data, Kindly start one");
+        }
+        if (quora.get(0).isAnalysis()) {
+            logger.info("User {} sending quora {} analysis", user.getEmailId(), quora.get(0).getId());
+            return Arrays.asList(quora.get(0), null);
+        }
+        if (quora.size() == 1 && !quora.get(0).isAnalysis()) {
+            logger.info("User {} quora {} analysis is under being analyzed, looking for reports", user.getEmailId(),
+                    quora.get(0).getId());
+            return Arrays.asList(null, "Your quora data is being analyzed. Kindly wait or Comeback later");
+        }
+        if (quora.size() > 1 && quora.get(1).isAnalysis()) {
+            logger.info("User {} quora {} analysis is under being analyzed, sending previous reports", user.getEmailId(),
+                    quora.get(0).getId());
+            return Arrays.asList(quora.get(1), "Your latest quora data in being analyzed, " +
+                    "Here's report from your previous analysis");
+        } else {
+            logger.error("User {} last analysis for quora was incomplete, some error occurred", user.getEmailId());
+            return Arrays.asList(null, "Your quora data is being analyzed. Kindly wait or Comeback later");
+        }
+    }
+
+    public QAnalysisChart prepareAnalysisQuora(Quora quora) {
+        QAnalysisChart analysisChart = new QAnalysisChart();
+        analysisChart.setQuery(quora.getSearch_query());
+        analysisChart.setQuestion(quora.getQuestion());
+
+        List<QuoraQuestion> questions = quoraQuestionService.getQuoraQuestionsByQuora(quora);
+        analysisChart.setQuestion_count(questions.size());
+        List<QuoraAnswers> answers = quoraAnswerService.getQuoraAnswersByQuora(quora);
+        analysisChart.setAnswer_count(answers.size());
+
+        List<Object[]> objects = quoraQuestionService.getTopMaxAnswersByQuora(quora);
+        List<HashtagAnalysisChart> hashtags_a = new ArrayList<>();
+        for (Object[] topHashtags : objects) {
+            HashtagAnalysisChart hashtagAnalysisChart = new HashtagAnalysisChart();
+            hashtagAnalysisChart.setName(String.valueOf(topHashtags[0]).substring(0, 10) + "...");
+            hashtagAnalysisChart.setNumber(Integer.valueOf(String.valueOf(topHashtags[1])));
+            hashtags_a.add(hashtagAnalysisChart);
+        }
+        analysisChart.setAnswers(hashtags_a);
+
+        int s_positive = 0;
+        int s_neutral = 0;
+        int s_negative = 0;
+        int h_s_positive = 0;
+        int h_s_neutral = 0;
+        int h_s_negative = 0;
+
+        for (QuoraAnswers quoraAnswers : answers) {
+            if (quoraAnswers.getSentimental() != null) {
+                if (quoraAnswers.getSentimental() >= 0.65) {
+                    s_positive++;
+                } else if (quoraAnswers.getSentimental() < 0.65 && quoraAnswers.getSentimental() >= 0.30) {
+                    s_neutral++;
+                } else {
+                    s_negative++;
+                }
+            }
+
+            analysisChart.setS_positive((int) (((double) s_positive / (double) answers.size()) * 100));
+            analysisChart.setS_neutral((int) (((double) s_neutral / (double) answers.size()) * 100));
+            analysisChart.setS_negative((int) (((double) s_negative / (double) answers.size()) * 100));
+        }
+        List<QuoraAnswers> answers1 = new ArrayList<>();
+        for (QuoraQuestion question : questions) {
+            if (question.isFrom_question()) {
+                answers1 = quoraAnswerService.getQuoraAnswersByQuestion(question);
+                break;
+            }
+        }
+        if (!answers1.isEmpty()) {
+            for (QuoraAnswers quoraAnswers : answers1) {
+                if (quoraAnswers.getSentimental() != null) {
+                    if (quoraAnswers.getSentimental() >= 0.65) {
+                        h_s_positive++;
+                    } else if (quoraAnswers.getSentimental() < 0.65 && quoraAnswers.getSentimental() >= 0.30) {
+                        h_s_neutral++;
+                    } else {
+                        h_s_negative++;
+                    }
+                }
+            }
+            analysisChart.setQ_s_positive((int) (((double) h_s_positive / (double) answers1.size()) * 100));
+            analysisChart.setQ_s_neutral((int) (((double) h_s_neutral / (double) answers1.size()) * 100));
+            analysisChart.setQ_s_negative((int) (((double) h_s_negative / (double) answers1.size()) * 100));
+        } else {
+            analysisChart.setQ_s_positive(0);
+            analysisChart.setQ_s_neutral(0);
+            analysisChart.setQ_s_negative(0);
+        }
+
+
+        return analysisChart;
     }
 
 

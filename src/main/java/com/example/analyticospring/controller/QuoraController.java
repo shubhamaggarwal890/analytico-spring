@@ -2,8 +2,12 @@ package com.example.analyticospring.controller;
 
 import com.example.analyticospring.entity.Analyzer;
 import com.example.analyticospring.entity.Quora;
+import com.example.analyticospring.entity.Reddit;
 import com.example.analyticospring.entity.User;
+import com.example.analyticospring.json.QAnalysisChart;
 import com.example.analyticospring.json.QuoraRequest;
+import com.example.analyticospring.json.RAnalysisChart;
+import com.example.analyticospring.json.RedditRequest;
 import com.example.analyticospring.service.AnalyzerService;
 import com.example.analyticospring.service.QuoraService;
 import com.example.analyticospring.service.UserService;
@@ -16,6 +20,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -70,4 +76,29 @@ public class QuoraController {
 
     }
 
+    @PostMapping("/get_quora_analysis")
+    public ResponseEntity<QAnalysisChart> getTwitterAnalysis(@RequestBody QuoraRequest quoraRequest) {
+        User user = userService.getById(quoraRequest.getUser_id());
+        if (user == null) {
+            logger.debug("POST request /get_quora_analysis {} user not found in database", quoraRequest.getUser_id());
+            return ResponseEntity.notFound().build();
+        }
+
+        logger.info("POST request /get_quora_analysis for user {}", user.getEmailId());
+        List<Object> quoraAnalyze = quoraService.getQuoraByUser(user);
+        QAnalysisChart analysisChart = new QAnalysisChart();
+
+        if (quoraAnalyze.get(0) == null && quoraAnalyze.get(1) != null) {
+            analysisChart.setMessage((String) quoraAnalyze.get(1));
+            return ResponseEntity.ok().body(analysisChart);
+        } else if (quoraAnalyze.get(0) != null && quoraAnalyze.get(1) == null) {
+            analysisChart = quoraService.prepareAnalysisQuora((Quora) quoraAnalyze.get(0));
+            analysisChart.setMessage(null);
+            return ResponseEntity.ok().body(analysisChart);
+        } else {
+            analysisChart = quoraService.prepareAnalysisQuora((Quora) quoraAnalyze.get(0));
+            analysisChart.setMessage((String) quoraAnalyze.get(1));
+            return ResponseEntity.ok().body(analysisChart);
+        }
+    }
 }

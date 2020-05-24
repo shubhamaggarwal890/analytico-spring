@@ -1,11 +1,7 @@
 package com.example.analyticospring.controller;
 
-import com.example.analyticospring.entity.Analyzer;
-import com.example.analyticospring.entity.Quora;
-import com.example.analyticospring.entity.Reddit;
-import com.example.analyticospring.entity.User;
-import com.example.analyticospring.json.QuoraRequest;
-import com.example.analyticospring.json.RedditRequest;
+import com.example.analyticospring.entity.*;
+import com.example.analyticospring.json.*;
 import com.example.analyticospring.service.AnalyzerService;
 import com.example.analyticospring.service.RedditService;
 import com.example.analyticospring.service.UserService;
@@ -18,6 +14,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -71,5 +69,33 @@ public class RedditController {
         return ResponseEntity.ok().build();
 
     }
+
+    @PostMapping("/get_reddit_analysis")
+    public ResponseEntity<RAnalysisChart> getTwitterAnalysis(@RequestBody RedditRequest redditRequest) {
+
+        User user = userService.getById(redditRequest.getUser_id());
+        if (user == null) {
+            logger.debug("POST request /get_reddit_analysis {} user not found in database", redditRequest.getUser_id());
+            return ResponseEntity.notFound().build();
+        }
+
+        logger.info("POST request /get_reddit_analysis for user {}", user.getEmailId());
+        List<Object> redditAnalyze = redditService.getRedditByUser(user);
+        RAnalysisChart analysisChart = new RAnalysisChart();
+
+        if (redditAnalyze.get(0) == null && redditAnalyze.get(1) != null) {
+            analysisChart.setMessage((String) redditAnalyze.get(1));
+            return ResponseEntity.ok().body(analysisChart);
+        } else if (redditAnalyze.get(0) != null && redditAnalyze.get(1) == null) {
+            analysisChart = redditService.prepareAnalysisReddit((Reddit) redditAnalyze.get(0));
+            analysisChart.setMessage(null);
+            return ResponseEntity.ok().body(analysisChart);
+        } else {
+            analysisChart = redditService.prepareAnalysisReddit((Reddit) redditAnalyze.get(0));
+            analysisChart.setMessage((String) redditAnalyze.get(1));
+            return ResponseEntity.ok().body(analysisChart);
+        }
+    }
+
 
 }

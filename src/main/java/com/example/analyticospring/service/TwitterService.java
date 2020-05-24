@@ -189,6 +189,7 @@ public class TwitterService implements TwitterServiceImpl {
         TAnalysisChart analysisChart = new TAnalysisChart();
         analysisChart.setFollowers(twitter.getFollowers());
         analysisChart.setFollowing(twitter.getFollowing());
+        analysisChart.setScreen_name(twitter.getScreen_name());
         List<Tweet> tweets = tweetService.getTweetsByTwitter(twitter);
         analysisChart.setTweets_count(tweets.size());
         int hashtags = 0;

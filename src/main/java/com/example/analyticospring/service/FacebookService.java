@@ -4,10 +4,7 @@ import com.example.analyticospring.entity.Analyzer;
 import com.example.analyticospring.entity.Facebook;
 import com.example.analyticospring.entity.FacebookPosts;
 import com.example.analyticospring.entity.User;
-import com.example.analyticospring.json.FacebookAnalysisResponse;
-import com.example.analyticospring.json.FacebookRequest;
-import com.example.analyticospring.json.HashtagRequest;
-import com.example.analyticospring.json.PostTweetResponseAnalysis;
+import com.example.analyticospring.json.*;
 import com.example.analyticospring.repository.FacebookRepository;
 import com.example.analyticospring.service.implementation.FacebookServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -128,27 +128,145 @@ public class FacebookService implements FacebookServiceImpl {
             FacebookPosts facebookPosts = facebookPostService.addPostInstance(post.getPost(), post.getSentimental(),
                     post.getQuestion(), post.getHashtag_count(), false, facebook);
 
-            if(facebookPosts == null){
+            if (facebookPosts == null) {
                 continue;
             }
 
             for (HashtagRequest hashtag : post.getHashtags()) {
-                facebookHashtagService.addFacebookHashtag(hashtag.getName(), facebookPosts);
+                facebookHashtagService.addFacebookHashtag(hashtag.getName(), facebookPosts, facebook);
             }
         }
 
         for (PostTweetResponseAnalysis post : facebookAnalysisResponse.getPage_post()) {
             FacebookPosts facebookPosts = facebookPostService.addPostInstance(post.getPost(), post.getSentimental(),
                     post.getQuestion(), post.getHashtag_count(), true, facebook);
-            if(facebookPosts == null){
+            if (facebookPosts == null) {
                 continue;
             }
             for (HashtagRequest hashtag : post.getHashtags()) {
-                facebookHashtagService.addFacebookHashtag(hashtag.getName(), facebookPosts);
+                facebookHashtagService.addFacebookHashtag(hashtag.getName(), facebookPosts, facebook);
             }
         }
 
         updateAnalysisCompletion(facebook, facebookAnalysisResponse.getEmail());
+    }
+
+    public List<Object> getFacebookByUser(User user) {
+        List<Facebook> facebook = facebookRepository.findFacebookByUser(user);
+        if (facebook.isEmpty()) {
+            logger.info("User {} not started any facebook analysis, looking for reports", user.getEmailId());
+            return Arrays.asList(null, "You haven't started any analysis of your facebook data, Kindly start one");
+        }
+        if (facebook.get(0).isAnalysis()) {
+            logger.info("User {} sending facebook {} analysis", user.getEmailId(), facebook.get(0).getId());
+            return Arrays.asList(facebook.get(0), null);
+        }
+        if (facebook.size() == 1 && !facebook.get(0).isAnalysis()) {
+            logger.info("User {} facebook {} analysis is under being analyzed, looking for reports", user.getEmailId(),
+                    facebook.get(0).getId());
+            return Arrays.asList(null, "Your facebook data is being analyzed. Kindly wait or Comeback later");
+        }
+        if (facebook.size() > 1 && facebook.get(1).isAnalysis()) {
+            logger.info("User {} facebook {} analysis is under being analyzed, sending previous reports", user.getEmailId(),
+                    facebook.get(0).getId());
+            return Arrays.asList(facebook.get(1), "Your latest facebook data in being analyzed, " +
+                    "Here's report from your previous analysis");
+        } else {
+            logger.error("User {} last analysis for facebook was incomplete, some error occurred", user.getEmailId());
+            return Arrays.asList(null, "Your facebook data is being analyzed. Kindly wait or Comeback later");
+        }
+    }
+
+    public FAnalysisChart prepareAnalysisFacebook(Facebook facebook) {
+        FAnalysisChart analysisChart = new FAnalysisChart();
+        analysisChart.setFriends(facebook.getFriends());
+        analysisChart.setUser(facebook.getName());
+        List<FacebookPosts> posts = facebookPostService.getPostsByFacebook(facebook);
+        analysisChart.setPost_count(posts.size());
+        int hashtags = 0;
+        List<Object[]> objects = facebookHashtagService.getTopHashtagsForFacebook(facebook);
+        List<HashtagAnalysisChart> hashtags_a = new ArrayList<>();
+        for (Object[] topHashtags : objects) {
+            HashtagAnalysisChart hashtagAnalysisChart = new HashtagAnalysisChart();
+            hashtagAnalysisChart.setName(String.valueOf(topHashtags[0]));
+            hashtagAnalysisChart.setNumber(Integer.valueOf(String.valueOf(topHashtags[1])));
+            hashtags_a.add(hashtagAnalysisChart);
+        }
+        analysisChart.setHashtags(hashtags_a);
+        int s_positive = 0;
+        int s_neutral = 0;
+        int s_negative = 0;
+        int q_true = 0;
+        int q_false = 0;
+        int from_page = 0;
+        int not_page = 0;
+        int h_s_positive = 0;
+        int h_s_neutral = 0;
+        int h_s_negative = 0;
+        int h_q_true = 0;
+        int h_q_false = 0;
+
+        for (FacebookPosts facebookPosts : posts) {
+            hashtags += facebookPosts.getHashtags();
+            if (facebookPosts.isFrom_page()) {
+                from_page++;
+                if (facebookPosts.getSentimental() != null) {
+                    if (facebookPosts.getSentimental() >= 0.65) {
+                        h_s_positive++;
+                    } else if (facebookPosts.getSentimental() < 0.65 && facebookPosts.getSentimental() >= 0.30) {
+                        h_s_neutral++;
+                    } else {
+                        h_s_negative++;
+                    }
+                }
+                if (facebookPosts.getQuestion() != null) {
+                    if (facebookPosts.getQuestion() >= 0.30) {
+                        h_q_true++;
+                    } else {
+                        h_q_false++;
+                    }
+                }
+            } else {
+                not_page++;
+                if (facebookPosts.getSentimental() != null) {
+                    if (facebookPosts.getSentimental() >= 0.65) {
+                        s_positive++;
+                    } else if (facebookPosts.getSentimental() < 0.65 && facebookPosts.getSentimental() >= 0.30) {
+                        s_neutral++;
+                    } else {
+                        s_negative++;
+                    }
+                }
+                if (facebookPosts.getQuestion() != null) {
+                    if (facebookPosts.getQuestion() >= 0.30) {
+                        q_true++;
+                    } else {
+                        q_false++;
+                    }
+                }
+            }
+        }
+        analysisChart.setS_positive((int) (((double) s_positive / (double) not_page) * 100));
+        analysisChart.setS_neutral((int) (((double) s_neutral / (double) not_page) * 100));
+        analysisChart.setS_negative((int) (((double) s_negative / (double) not_page) * 100));
+        analysisChart.setQ_true((int) (((double) q_true / (double) not_page) * 100));
+        analysisChart.setQ_false((int) (((double) q_false / (double) not_page) * 100));
+        analysisChart.setHashtags_count(hashtags);
+        THashtagModelChart hashtagModelChart = new THashtagModelChart();
+
+        if(facebook.getPage()!=null){
+            hashtagModelChart.setName(facebook.getPage());
+            hashtagModelChart.setS_positive((int) (((double) h_s_positive / (double) from_page) * 100));
+            hashtagModelChart.setS_neutral((int) (((double) h_s_neutral / (double) from_page) * 100));
+            hashtagModelChart.setS_negative((int) (((double) h_s_negative / (double) from_page) * 100));
+            hashtagModelChart.setQ_true((int) (((double) h_q_true / (double) from_page) * 100));
+            hashtagModelChart.setQ_false((int) (((double) h_q_false / (double) from_page) * 100));
+            analysisChart.setH_model(hashtagModelChart);
+        }else{
+            analysisChart.setH_model(null);
+        }
+
+        return analysisChart;
     }
 
 

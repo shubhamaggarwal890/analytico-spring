@@ -1,5 +1,6 @@
 package com.example.analyticospring.service;
 
+import com.example.analyticospring.entity.Quora;
 import com.example.analyticospring.entity.QuoraAnswers;
 import com.example.analyticospring.entity.QuoraQuestion;
 import com.example.analyticospring.repository.QuoraAnswerRepository;
@@ -10,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -22,12 +25,14 @@ public class QuoraAnswerService implements QuoraAnswerServiceImpl {
         this.answerRepository = answerRepository;
     }
 
-    public QuoraAnswers addAnswerInstance(String author, String answer, Double sentimental, QuoraQuestion question) {
+    public QuoraAnswers addAnswerInstance(String author, String answer, Double sentimental, QuoraQuestion question,
+                                          Quora quora) {
         QuoraAnswers answers = new QuoraAnswers();
         answers.setAuthor(author);
         answers.setAnswer(answer.substring(0, Math.min(answer.length(), 500)));
         answers.setSentimental(sentimental);
         answers.setQuestion(question);
+        answers.setQuora(quora);
         try {
             answers = answerRepository.save(answers);
             logger.info("answer of quora question {} successfully saved in to database", question.getId());
@@ -38,5 +43,14 @@ public class QuoraAnswerService implements QuoraAnswerServiceImpl {
         }
         return null;
     }
+
+    public List<QuoraAnswers> getQuoraAnswersByQuestion(QuoraQuestion question){
+        return answerRepository.findQuoraAnswersByQuestion(question);
+    }
+
+    public List<QuoraAnswers> getQuoraAnswersByQuora(Quora quora){
+        return answerRepository.findQuoraAnswersByQuora(quora);
+    }
+
 
 }

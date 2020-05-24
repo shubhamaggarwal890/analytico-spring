@@ -2,8 +2,11 @@ package com.example.analyticospring.controller;
 
 import com.example.analyticospring.entity.Analyzer;
 import com.example.analyticospring.entity.Facebook;
+import com.example.analyticospring.entity.Twitter;
 import com.example.analyticospring.entity.User;
+import com.example.analyticospring.json.FAnalysisChart;
 import com.example.analyticospring.json.FacebookRequest;
+import com.example.analyticospring.json.TAnalysisChart;
 import com.example.analyticospring.service.AnalyzerService;
 import com.example.analyticospring.service.FacebookService;
 import com.example.analyticospring.service.UserService;
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -72,4 +77,29 @@ public class FacebookController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/get_facebook_analysis")
+    public ResponseEntity<FAnalysisChart> getTwitterAnalysis(@RequestBody FacebookRequest facebookRequest) {
+        User user = userService.getById(facebookRequest.getUser_id());
+        if (user == null) {
+            logger.debug("POST request /get_facebook_analysis {} user not found in database", facebookRequest.getUser_id());
+            return ResponseEntity.notFound().build();
+        }
+
+        logger.info("POST request /get_facebook_analysis for user {}", user.getEmailId());
+        List<Object> facebookAnalyze = facebookService.getFacebookByUser(user);
+        FAnalysisChart analysisChart = new FAnalysisChart();
+
+        if (facebookAnalyze.get(0) == null && facebookAnalyze.get(1) != null) {
+            analysisChart.setMessage((String) facebookAnalyze.get(1));
+            return ResponseEntity.ok().body(analysisChart);
+        } else if (facebookAnalyze.get(0) != null && facebookAnalyze.get(1) == null) {
+            analysisChart = facebookService.prepareAnalysisFacebook((Facebook) facebookAnalyze.get(0));
+            analysisChart.setMessage(null);
+            return ResponseEntity.ok().body(analysisChart);
+        } else {
+            analysisChart = facebookService.prepareAnalysisFacebook((Facebook) facebookAnalyze.get(0));
+            analysisChart.setMessage((String) facebookAnalyze.get(1));
+            return ResponseEntity.ok().body(analysisChart);
+        }
+    }
 }

@@ -21,4 +21,9 @@ public class FacebookHashtag {
     @JoinColumn(name = "posts")
     private FacebookPosts post;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "facebook")
+    private Facebook facebook;
+
+
 }

@@ -2,6 +2,8 @@ package com.example.analyticospring.service;
 
 import com.example.analyticospring.entity.Facebook;
 import com.example.analyticospring.entity.FacebookPosts;
+import com.example.analyticospring.entity.Tweet;
+import com.example.analyticospring.entity.Twitter;
 import com.example.analyticospring.repository.FacebookPostRepository;
 import com.example.analyticospring.service.implementation.FacebookPostServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Slf4j
@@ -41,4 +45,9 @@ public class FacebookPostService implements FacebookPostServiceImpl {
         }
         return null;
     }
+
+    public List<FacebookPosts> getPostsByFacebook(Facebook facebook){
+        return facebookPostRepository.findFacebookPostsByFacebook(facebook);
+    }
+
 }

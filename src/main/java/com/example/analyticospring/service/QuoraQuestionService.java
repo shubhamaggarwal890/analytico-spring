@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Slf4j
 public class QuoraQuestionService implements QuoraQuestionServiceImpl {
@@ -39,4 +41,13 @@ public class QuoraQuestionService implements QuoraQuestionServiceImpl {
         }
         return null;
     }
+
+    public List<QuoraQuestion> getQuoraQuestionsByQuora(Quora quora){
+        return quoraQuestionRepository.findQuoraQuestionByQuora(quora);
+    }
+
+    public List<Object []> getTopMaxAnswersByQuora(Quora quora){
+        return quoraQuestionRepository.findMaxQuoraAnswersByQuora(quora);
+    }
+
 }

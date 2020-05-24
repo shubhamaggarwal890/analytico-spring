@@ -30,4 +30,9 @@ public class RedditComments {
     @JoinColumn(name = "post")
     private RedditPosts post;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reddit")
+    private Reddit reddit;
+
+
 }

@@ -28,4 +28,9 @@ public class QuoraAnswers {
     @JoinColumn(name = "question")
     private QuoraQuestion question;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "quora")
+    private Quora quora;
+
+
 }
