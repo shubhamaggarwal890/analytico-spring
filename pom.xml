@@ -11,7 +11,7 @@
 	<groupId>com.example</groupId>
 	<artifactId>analytico-spring</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>analytico-spring</name>
 	<description>Analyzing social media data</description>
 
@@ -124,6 +124,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<finalName>analytico-spring</finalName>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

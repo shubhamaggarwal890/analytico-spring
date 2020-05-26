@@ -33,7 +33,7 @@ public class FacebookService implements FacebookServiceImpl {
     private FacebookHashtagService facebookHashtagService;
 
     @Value("${analytico.flask}")
-    private String flaskurl;
+    private static String flaskurl;
 
 
     @Autowired
@@ -102,6 +102,9 @@ public class FacebookService implements FacebookServiceImpl {
     }
 
     public void callForAnalysis(FacebookRequest facebookRequest) {
+        if(System.getenv("FLASK_HOST")!=null){
+            flaskurl = "http://analytico-python:5000";
+        }
         WebClient webClient = WebClient.builder().baseUrl(flaskurl)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).build();
         Mono<FacebookAnalysisResponse> facebookAnalysisResponseMono = webClient.post().uri("/facebook_analysis")

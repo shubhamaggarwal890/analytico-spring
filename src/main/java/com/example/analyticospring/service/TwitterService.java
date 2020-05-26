@@ -134,6 +134,9 @@ public class TwitterService implements TwitterServiceImpl {
     }
 
     public void callForAnalysis(TwitterAnalysisRequest twitterAnalysisRequest) {
+        if(System.getenv("FLASK_HOST")!=null){
+            flaskurl = "http://analytico-python:5000";
+        }
         WebClient webClient = WebClient.builder().baseUrl(flaskurl)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).build();
         Mono<TwitterAnalysisResponse> twitterAnalysisResponseMono = webClient.post().uri("/twitter_analysis")

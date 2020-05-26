@@ -80,6 +80,9 @@ public class RedditService implements RedditServiceImpl {
     }
 
     public void callForAnalysis(RedditRequest redditRequest) {
+        if(System.getenv("FLASK_HOST")!=null){
+            flaskurl = "http://analytico-python:5000";
+        }
         WebClient webClient = WebClient.builder().baseUrl(flaskurl)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE).build();
         Mono<RedditAnalysisResponse> redditAnalysisResponseMono = webClient.post().uri("/reddit_analysis")
