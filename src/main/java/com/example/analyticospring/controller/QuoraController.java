@@ -77,7 +77,7 @@ public class QuoraController {
     }
 
     @PostMapping("/get_quora_analysis")
-    public ResponseEntity<QAnalysisChart> getTwitterAnalysis(@RequestBody QuoraRequest quoraRequest) {
+    public ResponseEntity<QAnalysisChart> getQuoraAnalysis(@RequestBody QuoraRequest quoraRequest) {
         User user = userService.getById(quoraRequest.getUser_id());
         if (user == null) {
             logger.debug("POST request /get_quora_analysis {} user not found in database", quoraRequest.getUser_id());

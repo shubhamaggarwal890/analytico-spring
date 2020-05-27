@@ -71,7 +71,7 @@ public class RedditController {
     }
 
     @PostMapping("/get_reddit_analysis")
-    public ResponseEntity<RAnalysisChart> getTwitterAnalysis(@RequestBody RedditRequest redditRequest) {
+    public ResponseEntity<RAnalysisChart> getRedditAnalysis(@RequestBody RedditRequest redditRequest) {
 
         User user = userService.getById(redditRequest.getUser_id());
         if (user == null) {

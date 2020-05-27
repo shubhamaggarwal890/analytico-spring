@@ -78,7 +78,7 @@ public class FacebookController {
     }
 
     @PostMapping("/get_facebook_analysis")
-    public ResponseEntity<FAnalysisChart> getTwitterAnalysis(@RequestBody FacebookRequest facebookRequest) {
+    public ResponseEntity<FAnalysisChart> getFacebookAnalysis(@RequestBody FacebookRequest facebookRequest) {
         User user = userService.getById(facebookRequest.getUser_id());
         if (user == null) {
             logger.debug("POST request /get_facebook_analysis {} user not found in database", facebookRequest.getUser_id());
