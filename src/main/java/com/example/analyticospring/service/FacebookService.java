@@ -33,7 +33,7 @@ public class FacebookService implements FacebookServiceImpl {
     private FacebookHashtagService facebookHashtagService;
 
     @Value("${analytico.flask}")
-    private static String flaskurl;
+    private String flaskurl;
 
 
     @Autowired
